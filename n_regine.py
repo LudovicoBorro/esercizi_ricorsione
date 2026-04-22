@@ -1,3 +1,4 @@
+import copy
 from time import time
 
 class NRegine:
@@ -5,6 +6,7 @@ class NRegine:
     def __init__(self):
         self.n_soluzioni = 0
         self.n_chiamate = 0
+        self.soluzioni = []
 
     #==============================================APPROCCIO 2=====================================================
     # Rappresentiamo soluzione come un vettore di N regine,
@@ -12,6 +14,7 @@ class NRegine:
     def solve2(self, N):
         self.n_soluzioni = 0
         self.n_chiamate = 0
+        self.soluzioni = []
         self._ricorsione2([], N)
 
     # Parziale è un vettore di coppie (riga, colonna)
@@ -24,8 +27,9 @@ class NRegine:
             # if self._is_soluzione(parziale):
                 # self.n_soluzioni += 1
                 # print(parziale)
-            self.n_soluzioni += 1
-            print(parziale)
+            if self._is_nuova_soluzione(parziale):
+                self.n_soluzioni += 1
+                self.soluzioni.append(copy.deepcopy(parziale))
         # Caso ricorsivo: ho messo < N regine
         else:
             for riga in range(N):
@@ -42,7 +46,8 @@ class NRegine:
 
     # Funzione che prende due regine e restituisce True se non si possono attaccare
     # altrimenti, restituisce False
-    def _is_pair_admissible(self, regina1, regina2) -> bool:
+    @staticmethod
+    def _is_pair_admissible(regina1, regina2) -> bool:
         # 1) Verifico la riga. Se non va bene, return False
         if regina1[0] == regina2[0]:
             return False
@@ -81,6 +86,19 @@ class NRegine:
                 return False
         return True
 
+    # Confrontiamo la soluzione potenziale con tutte quelle già trovate
+    # se è diversa, restituiamo True, altrimenti False
+    def _is_nuova_soluzione(self, soluzione_potenziale) -> bool:
+        N = len(soluzione_potenziale)
+        for soluzione in self.soluzioni:
+            counter = 0
+            for regina in soluzione_potenziale:
+                if regina in soluzione:
+                    counter += 1
+            if counter == N:
+                return False
+        return True
+
 if __name__ == "__main__":
     nreg = NRegine()
     start_time = time()
@@ -90,3 +108,4 @@ if __name__ == "__main__":
     print(f"Elapsed time: {end_time - start_time}")
     print(f"Ho trovato {nreg.n_soluzioni} soluzioni possibili")
     print(f"Chiamate effettuate: {nreg.n_chiamate}")
+    print(nreg.soluzioni)
