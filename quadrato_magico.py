@@ -22,9 +22,8 @@ class QuadratoMagico:
         self.n_chiamate += 1
         # Caso terminale
         if len(parziale) == self.N * self.N:
-            if self._is_valid(parziale):
-                self.n_soluzioni += 1
-                self.soluzioni.append(copy.deepcopy(parziale))
+            self.n_soluzioni += 1
+            self.soluzioni.append(copy.deepcopy(parziale))
         # Caso ricorsivo
         else:
             for numero in rimanenti:
@@ -55,15 +54,18 @@ class QuadratoMagico:
             if sum(colonna) != numero_magico:
                 return False
         # 3) Controllare diagonale 1
-        # diagonale1 = potenziale_soluzione[0 : self.N**2 : self.N+1]
-        # if sum(diagonale1) != numero_magico:
-            # return False
+        if len(parziale) == self.N * self.N:
+            diagonale1 = parziale[0 : self.N**2 : self.N+1]
+            if sum(diagonale1) != numero_magico:
+                return False
         # 4) Controllare diagonale 2
-        # somma = 0
-        # for indice in range(self.N):
-            # somma += potenziale_soluzione[indice*self.N + (self.N-1 - indice)]
-        # if somma != numero_magico:
-            # return False
+        n_colonne_completate = max(len(parziale) - self.N * (self.N - 1), 0)
+        if n_colonne_completate == 1:
+            somma = 0
+            for indice in range(self.N):
+                somma += parziale[indice*self.N + (self.N-1 - indice)]
+            if somma != numero_magico:
+                return False
         # 5) Passati tutti i controlli, possiamo ritornare True
         return True
 
