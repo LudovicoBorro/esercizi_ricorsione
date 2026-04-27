@@ -52,4 +52,4 @@ if __name__ == "__main__":
 
     #print(anagrammi_str("casa"))
 
-    print(anagrammi_str2("aaaa"))
+    print(anagrammi_str2("supercalifragilisticexpialidoci"))
